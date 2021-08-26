@@ -2,6 +2,8 @@
 
 RFID tag reader and 1D/2D barcode reader to MQTT - or any device that emulates a HID USB Keyboard with newline as the terminator.
 
+In theory any (real) keyboard could be captured, not just a device that emulates a keyboard.
+
 ## Getting Started
 
 NOTE needs a working MQTT broker, mosquitto is a good basic one to try:
@@ -14,7 +16,7 @@ If installing/working with a source checkout issue:
 
     pip install -r requirements.txt
 
-TODO service and udev permissions/rules
+TODO service (see https://github.com/clach04/pirest#pirest-service) and udev permissions/rules (see https://github.com/clach04/pyusb-keyboard-alike/commits/yarongtech)
 
 
 ## Credits
