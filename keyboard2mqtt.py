@@ -143,7 +143,7 @@ def main(argv=None):
         'debug': False,
         'mqtt_broker': 'localhost',
         'mqtt_port': 1883,
-        'mqtt_topic': 'tag_keyboard_reader',
+        'mqtt_topic': 'tag_keyboard_reader',  # to monitor, issue: mosquitto_sub -t tag_keyboard_reader
     }
     default_config.update(config)
     config = default_config
@@ -154,6 +154,20 @@ def main(argv=None):
         log.setLevel(level=logging.INFO)
     log.debug('hello')
     log.info('hello')
+
+    def callback_print_stdout(input_string):
+        print('%s' % input_string)
+
+    def callback_mqtt(input_string):
+        log.info('mqtt send: %r' % input_string)
+        mqtt_message = input_string
+        # initial payload trivial, just the keypresses with terminator (newline) removed
+        # no announcements, no timestamps, so client details
+        result =  publish.single(config['mqtt_topic'], mqtt_message, hostname=config['mqtt_broker'], port=config['mqtt_port'])
+        #log.debug('mqqt publish result %r', result)  # returns None on success, on failure exception
+
+    callback_function = callback_print_stdout  # TODO pick up from config?
+    callback_function = callback_mqtt  # TODO pick up from config?
 
     # list all devices
     for path in evdev.list_devices():
@@ -169,7 +183,7 @@ def main(argv=None):
     try:
         while True:
             read_string = keyboard_reader_evdev(dev)
-            print(read_string)  # TODO mqtt publish (or a callback mechanism rather than mqtt specific)
+            callback_function(read_string)
     except KeyboardInterrupt:
         logging.debug('Keyboard interrupt')
     except Exception as err:
@@ -177,13 +191,6 @@ def main(argv=None):
     finally:
         dev.ungrab()
 
-    """
-    # initial payload trivial, just the keypresses with terminator (newline) removed
-    # no announcements, no timestamps, so client details
-    mqqt_message = 'payload goes here'
-    result =  publish.single(config['mqtt_topic'], mqqt_message, hostname=config['mqtt_broker'], port=config['mqtt_port'])
-    log.debug('mqqt publish result %r', result)  # returns None on success, on failure exception
-    """
 
     return 0
 
