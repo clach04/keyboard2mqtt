@@ -8,6 +8,9 @@ import logging
 import os
 import sys
 
+import paho.mqtt.client as paho
+import paho.mqtt.publish as publish
+
 
 version_tuple = (0, 0, 1)
 version = version_string = __version__ = '%d.%d.%d' % version_tuple
@@ -45,6 +48,7 @@ def main(argv=None):
         'debug': False,
         'mqtt_broker': 'localhost',
         'mqtt_port': 1883,
+        'mqtt_topic': 'tag_keyboard_reader',
     }
     default_config.update(config)
     config = default_config
@@ -55,6 +59,12 @@ def main(argv=None):
         log.setLevel(level=logging.INFO)
     log.debug('hello')
     log.info('hello')
+
+    # initial payload trivial, just the keypresses with terminator (newline) removed
+    # no announcements, no timestamps, so client details
+    mqqt_message = 'payload goes here'
+    result =  publish.single(config['mqtt_topic'], mqqt_message, hostname=config['mqtt_broker'], port=config['mqtt_port'])
+    log.debug('mqqt publish result %r', result)  # returns None on success, on failure exception
 
     return 0
 
