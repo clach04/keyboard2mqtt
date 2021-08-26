@@ -16,7 +16,15 @@ If installing/working with a source checkout issue:
 
     pip install -r requirements.txt
 
-TODO service (see https://github.com/clach04/pirest#pirest-service) and udev permissions/rules (see https://github.com/clach04/pyusb-keyboard-alike/commits/yarongtech)
+### TODO
+
+  * service (see https://github.com/clach04/pirest#pirest-service)
+  * udev permissions/rules (see https://github.com/clach04/pyusb-keyboard-alike/commits/yarongtech)
+  * https://json5.org/ support - be easier to support hex digits for USB ids in config file, consider
+      * https://github.com/dpranke/pyjson5
+      * https://github.com/spyoungtech/json-five -- supports preserving comments (not needed for keyboard2mqtt, but cool :))
+  * USB id (list) specified in (json5) config, see above
+  * document known working devices
 
 
 ## Credits
